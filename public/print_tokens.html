@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Voting Tokens - Feza Vote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+New:wght@700&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .no-print {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            background: #4338ca;
+        }
+
+        .container {
+            max-width: 210mm;
+            /* A4 width */
+            margin: 0 auto;
+            background: white;
+            padding: 10mm;
+        }
+
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            /* 3 columns */
+            gap: 0;
+            border-top: 1px dashed #ccc;
+            border-left: 1px dashed #ccc;
+        }
+
+        .token-card {
+            border-right: 1px dashed #ccc;
+            border-bottom: 1px dashed #ccc;
+            padding: 15px 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            /* Fixed height for consistency */
+            page-break-inside: avoid;
+        }
+
+        .token-label {
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .token-code {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 1px;
+        }
+
+        .watermark {
+            font-size: 8px;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .container {
+                width: 100%;
+                max-width: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            @page {
+                margin: 10mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="no-print">
+        <h1>🖨️ Print Voting Tokens</h1>
+        <p>Total Tokens: <span id="total-count">Loading...</span> | Format: 3 Columns Grid</p>
+        <p id="print-election-status">Election status: checking...</p>
+        <p id="print-winner-declaration" style="white-space: pre-wrap;">No winner declaration yet.</p>
+        <button class="btn" onclick="window.print()">Print Tokens</button>
+        <button class="btn" onclick="sessionStorage.clear(); window.location.href='results.html'"
+            style="background: #ef4444;">Logout</button>
+        <!-- <button class="btn" onclick="window.close()" style="background: #64748b;">Close</button> -->
+    </div>
+
+    <div class="container">
+        <div id="grid" class="token-grid">
+            <!-- Tokens injected here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const [tokensResponse, stateResponse] = await Promise.all([
+                    fetch('/api/tokens'),
+                    fetch('/api/election-state')
+                ]);
+                const data = await tokensResponse.json();
+                const state = await stateResponse.json();
+
+                if (data && data.tokens) {
+                    document.getElementById('total-count').textContent = data.total;
+                    renderTokens(data.tokens);
+                }
+
+                const statusEl = document.getElementById('print-election-status');
+                const winnerEl = document.getElementById('print-winner-declaration');
+                if (statusEl) {
+                    statusEl.textContent = state.isOpen ? 'Election is OPEN' : 'Election is CLOSED';
+                    statusEl.style.color = state.isOpen ? '#22c55e' : '#ef4444';
+                }
+                if (winnerEl) {
+                    winnerEl.textContent = (state.winnerDeclaration || '').trim() || 'No winner declaration yet.';
+                }
+            } catch (error) {
+                console.error('Error loading tokens:', error);
+                document.getElementById('grid').innerHTML = '<p style="color:red; text-align:center; grid-column:1/-1;">Error loading tokens. Please ensure the server is running.</p>';
+            }
+        });
+
+        function renderTokens(tokens) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            tokens.forEach(tokenObj => {
+                const card = document.createElement('div');
+                card.className = 'token-card';
+                card.innerHTML = `
+                    <div class="token-label">Feza Vote Token</div>
+                    <div class="token-code">${tokenObj.token}</div>
+                    <div class="watermark">OFFICIAL BALLOT</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    </script>
+</body>
+
+</html>

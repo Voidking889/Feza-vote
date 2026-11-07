@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules & Guidelines - Feza Vote</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .rules-content {
+            max-width: 800px;
+            margin: 40px auto;
+            line-height: 1.8;
+        }
+
+        .rule-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 30px;
+        }
+
+        .rule-section {
+            margin-bottom: 30px;
+        }
+
+        .rule-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rule-list {
+            list-style: none;
+        }
+
+        .rule-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .rule-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--primary-color);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">📋 Guidelines & Rules</h1>
+                <p class="subtitle">Feza School Voting System</p>
+            </div>
+        </header>
+
+        <main class="rules-content">
+            <a href="index.html" class="back-btn">← Back to Voting</a>
+
+            <div class="rule-card">
+                <div class="rule-section">
+                    <h3>🗳️ General Voting Rules</h3>
+                    <ul class="rule-list">
+                        <li>Each student is entitled to one unique voting token.</li>
+                        <li>Tokens are strictly single-use and cannot be shared or reused.</li>
+                        <li>Attempts to vote multiple times or bypass system security will result in disqualification.
+                        </li>
+                        <li>Voters must select exactly one candidate for President and one for Vice President.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-section">
+                    <h3>⚖️ Integrity & Conduct</h3>
+                    <ul class="rule-list">
+                        <li>All candidates and supporters must maintain professional conduct throughout the election.
+                        </li>
+                        <li>No campaigning or interference is allowed at the physical voting stations.</li>
+                        <li>System logs are recorded to ensure transparency and auditability.</li>
+                    </ul>
+                </div>
+
+                <div class="rule-section">
+                    <h3>⚙️ System Usage</h3>
+                    <ul class="rule-list">
+                        <li>Ensure you have a stable network connection .</li>
+                        <li>Follow the on-screen instructions carefully during the validation process.</li>
+                        <li>If a token fails to validate, please report immediately to the election observer.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <footer style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+                © 2026 Feza School Election Committee
+            </footer>
+        </main>
+    </div>
+</body>
+
+</html>

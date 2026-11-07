@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feza School Voting System</title>
+    <script>
+        // Check if accessing through correct server
+        if (window.location.origin.includes('5500') || window.location.protocol === 'file:') {
+            alert('⚠️ Please access this page through the Flask server!\n\nOpen: http://localhost:3000\n\nMake sure the Flask server is running with: python app.py');
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🗳️ Feza Poll</h1>
+                <p class="subtitle">School Election System</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-bar" style="margin-bottom: 25px; display: flex; gap: 20px; justify-content: center;">
+           
+            <a href="rules.html" class="btn btn-secondary" style="padding: 8px 20px; font-size: 0.9rem;">Rules &
+                Guidelines</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Token Input Section -->
+            <section class="voting-section">
+                <div class="section-header">
+                    <h2>Validate Your Vote</h2>
+                    <p>Enter your voting token to begin</p>
+                </div>
+
+                <div class="voter-input-container">
+                    <input type="text" id="voter-token" class="voter-input" placeholder="Enter your Voting Token"
+                        required>
+                    <button id="check-token-btn" class="btn btn-secondary">Validate Token</button>
+                   <!--- <button id="vote-again-btn" class="btn btn-secondary" type="button">Vote Again</button>-->
+                </div>
+
+                <div id="voter-status" class="voter-status"></div>
+                <div id="election-status-banner" class="voter-status show" style="margin-top: 10px;">
+                    Election status: checking...
+                </div>
+            </section>
+
+            <!-- President Voting Section -->
+            <section id="president-section" class="voting-section" style="display:none;">
+                <div class="section-header">
+                    <h2>Vote for President</h2>
+                    <p id="pres-status" style="color: var(--secondary-color); font-weight: 500;"></p>
+                </div>
+                <div id="president-candidates" class="candidates-grid">
+                    <!-- President candidates will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Vice President Voting Section -->
+            <section id="vice-president-section" class="voting-section" style="display:none;">
+                <div class="section-header">
+                    <h2>Vote for Vice President</h2>
+                    <p id="vice-status" style="color: var(--secondary-color); font-weight: 500;"></p>
+                </div>
+                <div id="vice-president-candidates" class="candidates-grid">
+                    <!-- Vice President candidates will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Completion Message -->
+            <section id="completion-section" class="voting-section" style="display:none; text-align: center;">
+                <div class="section-header">
+                    <h2>✅ Voting Complete</h2>
+                </div>
+                <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 20px;">
+                    You have successfully voted for both President and Vice President.
+                </p>
+                <button id="new-vote-btn" class="btn btn-primary"> New Vote </button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Feza School Voting System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!--<button id="vote-again-dashboard-btn" class="btn btn-primary dashboard-killswitch-btn" type="button"
+        title="Reset current vote flow without page refresh">
+        Vote Again
+    </button>-->
+
+    <!-- Vote Confirmation Modal -->
+    <div id="vote-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="modal-icon">✅</div>
+                <h3>Vote Submitted!</h3>
+                <p id="modal-message">Your vote has been recorded successfully.</p>
+                <button id="close-modal-btn" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

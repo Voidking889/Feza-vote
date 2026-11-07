@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Results - Feza Vote</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #FF6B00;
+            /* Feza Orange */
+            --accent-glow: rgba(255, 107, 0, 0.3);
+            --success-color: #10b981;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(12px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 2vh 4vw;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 10vh;
+        }
+
+        .logo {
+            font-size: 2.5vw;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-color), #ff9d5c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2vw;
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2vw;
+            padding: 2vw;
+            height: 90vh;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5vw;
+            padding: 1.5vw;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chart-title {
+            font-size: 1.5vw;
+            margin-bottom: 1vw;
+            color: var(--text-secondary);
+        }
+
+        .chart-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Stats & Cards Section */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2vw;
+            overflow-y: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1vw;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            padding: 1.5vw;
+            border-radius: 1vw;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5vw;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.9vw;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .candidates-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1vw;
+        }
+
+        .candidate-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            padding: 1vw;
+            border-radius: 1vw;
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+            transition: all 0.3s ease;
+        }
+
+        .candidate-card:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-color);
+            background: rgba(255, 107, 0, 0.1);
+        }
+
+        .candidate-card.president {
+            border-left-color: #8b5cf6;
+        }
+
+        .candidate-card.vice {
+            border-left-color: #ec4899;
+        }
+
+        .candidate-img {
+            width: 4vw;
+            height: 4vw;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-size: 1.2vw;
+            font-weight: 600;
+        }
+
+        .candidate-pos {
+            font-size: 0.8vw;
+            color: var(--text-secondary);
+        }
+
+        .candidate-votes {
+            font-size: 1.5vw;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #ff9d5c);
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* TV / Fullscreen Optimizations */
+        @media (min-width: 1920px) {
+            body {
+                font-size: 18px;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow-y: auto;
+            }
+
+            .header {
+                height: auto;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .live-indicator {
+                font-size: 0.9rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            .candidate-img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .candidate-name {
+                font-size: 1rem;
+            }
+
+            .candidate-votes {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">🗳️ Feza Vote Live</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="live-indicator">
+                <div class="dot"></div>
+                LIVE RESULTS
+            </div>
+            <button id="logout-btn"
+                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 14px; transition: all 0.2s;">Logout</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Left Column: Chart -->
+        <div class="chart-container">
+            <div class="chart-title">Vote Progression (Live)</div>
+            <div class="chart-wrapper">
+                <canvas id="voteChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Column: Stats & Top Candidates -->
+        <aside class="side-panel">
+            <div class="stat-card" style="text-align:left;">
+                <div class="stat-label">Election Status</div>
+                <div class="stat-value" id="public-election-status" style="font-size:1.4rem;">Checking...</div>
+                <div class="stat-label" style="margin-top:10px;">Winner Declaration</div>
+                <div id="public-winner-declaration" style="color: var(--text-primary); font-size: 0.95rem; white-space: pre-wrap;">
+                    No winner declaration yet.
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTokenVotes">0</div>
+                    <div class="stat-label">Total Votes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="turnout">0%</div>
+                    <div class="stat-label">Turnout</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="candidates-list" id="leaderboard">
+                <!-- Injected via JS -->
+            </div>
+        </aside>
+    </main>
+
+    <script src="public_results.js"></script>
+</body>
+
+</html>

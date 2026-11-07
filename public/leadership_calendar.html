@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leadership Calendar - Feza Vote</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .calendar-controls {
+            margin-bottom: 18px;
+        }
+
+        .year-calendar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+        }
+
+        .year-tile {
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-height: 86px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .year-tile:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.12);
+        }
+
+        .year-tile.active {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.22);
+            color: #fff;
+        }
+
+        .year-tile.has-data {
+            border-left: 4px solid #22c55e;
+        }
+
+        .year-tile.no-data {
+            border-left: 4px solid #64748b;
+            opacity: 0.85;
+        }
+
+        .year-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .year-state {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .calendar-label {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .history-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .history-year {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .history-team {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .history-person {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .history-person img {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+
+        .history-role {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .history-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .history-metrics {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .history-actions .btn {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+
+        .history-summary {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .contestants-section {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .contestants-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .contestants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .contestant-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .contestant-card img {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+
+        .contestant-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .contestant-meta {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .admin-sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.45);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 2200;
+        }
+
+        .admin-sidebar-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(88vw, 340px);
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.97);
+            border-left: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transform: translateX(105%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+            z-index: 2300;
+            padding: 24px 18px;
+            overflow-y: auto;
+        }
+
+        .admin-sidebar.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .admin-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .admin-sidebar-links {
+            display: grid;
+            gap: 8px;
+        }
+
+        .admin-sidebar-link {
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            font-size: 0.92rem;
+            padding: 11px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .admin-sidebar-link:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.12);
+        }
+
+        .sidebar-danger {
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #fecaca;
+        }
+
+        .calendar-menu-toggle {
+            background: linear-gradient(135deg, var(--primary-color), #FF8C33);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .calendar-menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="header-content" style="text-align:left;">
+                    <h1 class="logo">Leadership Calendar</h1>
+                    <p class="subtitle">Historical Presidents and Vice Presidents</p>
+                </div>
+                <div class="controls">
+                    <button id="calendar-menu-toggle" class="btn calendar-menu-toggle" title="Open admin navigation"
+                        aria-label="Open admin navigation">&#8942;</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="results-section">
+                <div class="section-header">
+                    <h2>Leadership Timeline View</h2>
+                </div>
+                <div class="calendar-controls">
+                    <div class="calendar-label">Election Year Calendar (2026 to Present)</div>
+                    <div id="year-calendar" class="year-calendar"></div>
+                </div>
+                <div id="history-grid" class="calendar-grid"></div>
+                <div id="contestants-section" class="contestants-section" style="display:none;">
+                    <div class="contestants-title">2026 Contestants</div>
+                    <div id="contestants-grid" class="contestants-grid"></div>
+                </div>
+                <div id="current-contestants-section" class="contestants-section">
+                    <div class="contestants-title">Present Contestants</div>
+                    <div id="current-contestants-grid" class="contestants-grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="calendar-sidebar-overlay" class="admin-sidebar-overlay"></div>
+    <aside id="calendar-sidebar" class="admin-sidebar" aria-hidden="true">
+        <div class="admin-sidebar-header">
+            <h3>Menu</h3>
+            <button id="calendar-sidebar-close" class="btn btn-icon" title="Close menu">X</button>
+        </div>
+        <div class="admin-sidebar-links">
+            <a href="results.html" class="admin-sidebar-link">Home</a>
+            <a href="public_results.html" class="admin-sidebar-link">Live Results</a>
+            <a href="register.html" class="admin-sidebar-link">Register Candidates</a>
+            <a href="rules.html" class="admin-sidebar-link">Rules & Guidelines</a>
+            <a href="print_tokens.html" class="admin-sidebar-link">Print Tokens</a>
+            <button id="calendar-logout" class="admin-sidebar-link sidebar-action sidebar-danger" type="button">Logout</button>
+        </div>
+    </aside>
+
+    <script src="leadership_calendar.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration - Feza School Voting System</title>
+    <script>
+        // Check if accessing through correct server
+        if (window.location.origin.includes('5500') || window.location.protocol === 'file:') {
+            alert('⚠️ Please access this page through the Flask server!\n\nOpen: http://localhost:3000/register.html\n\nMake sure the Flask server is running with: python app.py');
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">🗳️ Feza Vote</h1>
+                <p class="subtitle">Candidate Registration</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <!-- <nav class="nav-bar">
+            <a href="/" class="nav-link">← Back to Voting</a>
+            <a href="/register.html" class="nav-link active">Register Candidate</a>
+        </nav>
+
+        <! -- Main Content -->
+        <main class="main-content">
+            <section class="registration-section" style="margin-bottom: 20px;">
+                <div class="section-header">
+                    <h2>Election Status</h2>
+                </div>
+                <p id="register-election-status" style="margin-bottom: 8px; color: var(--text-secondary);">Checking...</p>
+                <p id="register-winner-declaration" style="white-space: pre-wrap; color: var(--text-primary);">No winner declaration yet.</p>
+            </section>
+
+            <section class="registration-section" id="register-candidate-section">
+                <div class="section-header">
+                    <h2>Register as Candidate</h2>
+                    <p>Fill in your details to register for the election</p>
+                </div>
+
+                <form id="registration-form" class="registration-form">
+                    <div class="form-group">
+                        <label for="candidate-name" class="form-label">Full Name *</label>
+                        <input type="text" id="candidate-name" class="form-input" placeholder="Enter your full name"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="candidate-position" class="form-label">Position *</label>
+                        <select id="candidate-position" class="form-input" required>
+                            <option value="">Select a position</option>
+                            <option value="president">President</option>
+                            <option value="vice_president">Vice President</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="custom-position-group" style="display: none;">
+                        <label for="custom-position" class="form-label">Custom Position *</label>
+                        <input type="text" id="custom-position" class="form-input" placeholder="Enter custom position">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="candidate-image" class="form-label">Profile Image *</label>
+                        <div class="image-input-container">
+                            <input type="file" id="candidate-image" class="form-input image-input" accept="image/*"
+                                required>
+                            <div class="image-preview-container">
+                                <img id="image-preview" src="" alt="Preview" class="image-preview"
+                                    onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'%3E%3Crect fill=\'%23e2e8f0\' width=\'200\' height=\'200\'/%3E%3Ctext fill=\'%2394a3b8\' font-family=\'sans-serif\' font-size=\'14\' dy=\'10.5\' font-weight=\'bold\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\'%3ENo Image%3C/text%3E%3C/svg%3E'">
+                            </div>
+                        </div>
+                        <small class="form-hint">Upload your profile image (JPG, PNG, or GIF - Max 7MB)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="candidate-slogan" class="form-label">Campaign Slogan</label>
+                        <input type="text" id="candidate-slogan" class="form-input"
+                            placeholder="Enter your campaign slogan (e.g., 'Together we can make a difference!')"
+                            maxlength="100">
+                        <small class="form-hint">A short, inspiring message for your campaign (optional)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="candidate-student-id" class="form-label">Student ID *</label>
+                        <input type="text" id="candidate-student-id" class="form-input"
+                            placeholder="Enter your Student ID" required>
+                    </div>
+
+                    <div id="form-status" class="form-status"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submit-btn">
+                            Register as Candidate
+                        </button>
+                        <button type="reset" class="btn btn-secondary" id="reset-btn">
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Registered Candidates Section -->
+            <section class="registered-candidates-section">
+                <div class="section-header">
+                    <h2>Registered Candidates</h2>
+                    <button id="refresh-candidates" class="btn btn-icon" title="Refresh List">
+                        🔄
+                    </button>
+                </div>
+                <div id="registered-candidates-container" class="registered-candidates-grid">
+                    <!-- Registered candidates will be displayed here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Feza School Voting System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="modal-icon">✅</div>
+                <h3>Registration Successful!</h3>
+                <p id="success-message">You have been registered as a candidate.</p>
+                <div class="modal-actions">
+                    <button id="close-success-btn" class="btn btn-primary">Close</button>
+                    <a href="/" class="btn btn-secondary">Go to Voting</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+
+</html>
