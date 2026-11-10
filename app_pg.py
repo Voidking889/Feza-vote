@@ -24,12 +24,14 @@ from flask import Flask, request, jsonify, send_from_directory, g
 from flask_cors import CORS
 
 from auth_config import AUTH_CONFIG
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__, static_folder='public', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "PUT", "OPTIONS"]}})
 
 # ---------------------------------------------------------------- config
-#databse URL
+#====ONLY THE STRING NANES OF ENV VARS SHOULD BE CHANGED BELOW, NOT THE CODE LOGIC====
 DATABASE_URL = os.environ.get('DATABASE_URL')
 ADMIN_CONTROL_KEY = os.environ.get('ADMIN_CONTROL_KEY')
 TOKEN_FILE = os.environ.get('TOKEN_FILE', 'public/voters_tokens.txt')
