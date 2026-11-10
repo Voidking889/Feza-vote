@@ -1,0 +1,5 @@
+*when online remember the following:
+1.To paste the datbase URL postgre in file:app_local.py , app_pg.py
+2.keep real credentials in the .env.example---> copy the content and create another(.env) file and paste the content and !!!!!!!!!!!!Don't commit!!!!!!!!!
+3startt the transformation process
+
