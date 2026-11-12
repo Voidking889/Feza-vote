@@ -1,0 +1,19 @@
+# Render Blueprint: Render reads this when you choose New -> Blueprint.
+services:
+  - type: web
+    name: feza-vote
+    runtime: python
+    plan: free              # use "starter" during election week to avoid sleeping
+    region: frankfurt       # pick the region closest to your Neon database
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app_pg:app --workers 1 --threads 8 --timeout 60
+    healthCheckPath: /api/election-state
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DATABASE_URL        # Neon pooled connection string
+        sync: false
+      - key: ADMIN_CONTROL_KEY
+        sync: false
+      - key: AUTH_CONFIG_JSON
+        sync: false
