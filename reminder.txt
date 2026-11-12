@@ -1,13 +1,3 @@
-*when online remember the following:
-1.To paste the datbase URL postgre in file:app_local.py , app_pg.py
-2.keep real credentials in the .env.example---> copy the content and create another(.env) file and paste the content and !!!!!!!!!!!!Don't commit!!!!!!!!!
-3. startt the transformation process
-😂😂😊😊😊😊😊😊
+Running it on voting day
 
-
-   Neon’s free tier also takes a second or two to wake the database on the first request after it has been idle. !!!!!!!!Open the site a few minutes before voting starts so students don’t hit that delay.!!!!!!!
-Before you push to GitHub
-
-Don’t commit the Neon connection string. It contains your password, so keep it only in .env, which is in the .gitignore I gave you. If it ever lands in the repo, reset the password in the Neon dashboard.
-
-Want me to apply that pool change to app_pg.py and give you the updated file?
+Run gunicorn -w 4 -b 0.0.0.0:3000 app_pg:app instead of python app_pg.py. Note that your earlier setup was meant to work offline on a school network, and Neon needs internet on the server machine. If the school Wi-Fi is unreliable, keep a local Postgres (the Docker file) as a fallback, since only DATABASE_URL changes.

@@ -9,6 +9,9 @@ Run app_pg.py once first (or let this script do it for you by importing nothing:
 it creates the schema itself), then run this BEFORE the election starts.
 Safe to re-run: existing rows are skipped.
 """
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent / '.env')
 import os
 import sqlite3
 import sys
