@@ -31,7 +31,7 @@ Thumbs.db
 
 #.env
 .env
-auth_config.py
+
 voting_system.db*
 logs/
 __pycache__/
